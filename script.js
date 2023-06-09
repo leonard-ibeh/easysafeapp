@@ -54,3 +54,137 @@ const inputTransferAmount = document.querySelector(".form__input--amount");
 const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
+
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = "";
+  movements.forEach(function (mov, i) {
+    const type = mov > 0 ? "deposit" : "withdrawal";
+    const html = `        <div class="movements__row">
+  <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+  <div class="movements__value">${mov}£</div>
+</div>
+`;
+
+    containerMovements.insertAdjacentHTML("afterbegin", html);
+  });
+};
+
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+
+  labelBalance.textContent = `${balance}£`;
+};
+
+const calDisplaySummary = function (acc) {
+  const incomes = acc.movements
+    .filter((mov) => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}£`;
+  const outcomes = acc.movements
+    .filter((mov) => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(outcomes)}£`;
+
+  const interest = acc.movements
+    .filter((mov) => mov > 0)
+    .map((mov) => (mov * acc.interestRate) / 100)
+    .filter((int) => int >= 1)
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${interest}£`;
+};
+
+const createUserNames = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(" ")
+      .map((name) => name[0])
+      .join("");
+  });
+};
+createUserNames(accounts);
+console.log(accounts);
+
+let currentAccount;
+
+btnLogin.addEventListener("click", function (e) {
+  // prevent form form submitting
+  e.preventDefault();
+
+  currentAccount = accounts.find(
+    (acc) => acc.username === inputLoginUsername.value
+  );
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    console.log("Login");
+    // Display UI and message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(" ")[0]
+    }`;
+    containerApp.style.opacity = 100;
+    // clear the input fields
+    inputLoginUsername.value = inputLoginPin.value = "";
+    inputLoginPin.blur();
+    //  Display Movements
+    displayMovements(currentAccount.movements);
+
+    // Display calcBalanceDisplay
+    calcDisplayBalance(currentAccount.movements);
+
+    //  Display calcDisplaySummary
+    calDisplaySummary(currentAccount);
+  }
+});
+
+/*          Testing map methods              */
+
+// const movementsDescription = account1.movements.map(
+//   (mov, i) =>
+//     `Movement ${i + 1}: You ${mov > 0 ? "deposited" : "withdrew"} ${Math.abs(
+//       mov
+//     )}`
+// );
+// console.log(movementsDescription);
+// for (const mov of movementsDescription) {
+//   console.log(mov);
+// }
+
+// const user = account3.owner;
+
+// const createUserName = function (accs) {
+//   accs.forEach(function (acc) {
+//     acc.username = acc.owner
+//       .toLowerCase()
+//       .split(" ")
+//       .map((word) => word[0])
+//       .join("");
+//   });
+// };
+// createUserName(accounts);
+
+// console.log(createUserName(accounts));
+
+// const app = function (acc) {
+//   acc.username = acc.owner
+//     .toLowerCase()
+//     .split(" ")
+//     .map((name) => name[0])
+//     .join("");
+//   // return acc.username;
+// };
+// app(account4);
+// console.log(app(account4));
+
+const data1 = [5, 2, 4, 1, 15, 8, 3];
+const data2 = [16, 6, 10, 5, 6, 1, 4];
+
+const calcAv = function (data) {
+  const humanAge = data.map((data) => (data <= 2 ? 2 * data : 16 + data * 4));
+  console.log(humanAge);
+  const adult = humanAge.filter((age) => age >= 18);
+  console.log(adult);
+  const average = adult.reduce((acc, age) => acc + age, 0) / adult.length;
+  console.log(average);
+};
+
+calcAv(data1);
