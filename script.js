@@ -55,9 +55,10 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = "";
-  movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
     const html = `        <div class="movements__row">
   <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
@@ -159,6 +160,23 @@ btnTransfer.addEventListener("click", function (e) {
     updateUI(currentAccount);
   }
 });
+btnLoan.addEventListener("click", function (e) {
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (
+    amount > 0 &&
+    currentAccount.movements.some((mov) => mov >= amount * 0.1)
+  ) {
+    //  add movement
+    currentAccount.movements.push(amount);
+    // update UI
+    updateUI(currentAccount);
+    // clear input field after performing action
+    inputLoanAmount.value = "";
+  }
+});
 
 btnClose.addEventListener("click", function (e) {
   e.preventDefault();
@@ -180,20 +198,12 @@ btnClose.addEventListener("click", function (e) {
   inputCloseUsername.value = inputClosePin.value = "";
 });
 
-btnLoan.addEventListener("click", function (e) {
+let sorted = false;
+btnSort.addEventListener("click", function (e) {
   e.preventDefault();
-
-  const amount = Number(inputLoanAmount.value);
-
-  if (
-    amount > 0 &&
-    currentAccount.movements.some((mov) => mov >= amount * 0.1)
-  ) {
-    //  add movement
-    currentAccount.movements.push(amount);
-    // update UI
-    updateUI(currentAccount);
-  }
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+  console.log("login");
 });
 
 /*          Testing map methods              */
