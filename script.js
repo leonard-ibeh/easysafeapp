@@ -163,7 +163,6 @@ const createUserNames = function (accs) {
   });
 };
 createUserNames(accounts);
-console.log(accounts);
 
 const updateUI = function (acc) {
   //  Display Movements
@@ -176,10 +175,27 @@ const updateUI = function (acc) {
   calDisplaySummary(acc);
 };
 
-let currentAccount;
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+const startLogOutTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+    labelTimer.textContent = `${min}:${sec}`;
+
+    if (time === 0) {
+      clearInterval(timer);
+      labelWelcome.textContent = "Login to get started";
+      containerApp.style.opacity = 0;
+    }
+    time--;
+  };
+  // Set time to 5 minutes
+  let time = 120;
+  // Call the timer every second
+  tick();
+  const timer = setInterval(tick, 1000);
+  return timer;
+};
+let currentAccount, timer;
 
 btnLogin.addEventListener("click", function (e) {
   // prevent form form submitting
@@ -206,7 +222,6 @@ btnLogin.addEventListener("click", function (e) {
       year: "numeric",
       // weekday: "long",
     };
-    const locale = navigator.language;
     labelDate.textContent = new Intl.DateTimeFormat(
       currentAccount.locale,
       options
@@ -224,6 +239,10 @@ btnLogin.addEventListener("click", function (e) {
     // clear the input fields
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
+
+    // Timer
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
     updateUI(currentAccount);
   }
 });
@@ -249,8 +268,13 @@ btnTransfer.addEventListener("click", function (e) {
     currentAccount.movementsDates.push(new Date().toISOString());
     receiverAcc.movementsDates.push(new Date().toISOString());
     updateUI(currentAccount);
+
+    // RESET TIMER
+    clearInterval(timer);
+    timer = startLogOutTimer();
   }
 });
+
 btnLoan.addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -268,10 +292,14 @@ btnLoan.addEventListener("click", function (e) {
       currentAccount.movementsDates.push(new Date().toISOString());
       // update UI
       updateUI(currentAccount);
+
+      // RESET TIMER
+      clearInterval(timer);
+      timer = startLogOutTimer();
       // clear input field after performing action
-      inputLoanAmount.value = "";
     }, 2500);
   }
+  inputLoanAmount.value = "";
 });
 
 btnClose.addEventListener("click", function (e) {
