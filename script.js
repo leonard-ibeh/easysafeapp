@@ -1,5 +1,5 @@
 "use strict";
-
+/* Manual inputing of Account */
 const account1 = {
   owner: "Jonas Schmedtmann",
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
@@ -43,6 +43,16 @@ const account3 = {
   movements: [200, -200, 340, -300, -20, 50, 400, -460],
   interestRate: 0.7,
   pin: 3333,
+  movementsDates: [
+    "2019-11-01T13:15:33.035Z",
+    "2019-11-30T09:48:16.867Z",
+    "2019-12-25T06:04:23.907Z",
+    "2020-01-25T14:18:46.235Z",
+    "2020-02-05T16:33:06.386Z",
+    "2020-04-10T14:43:26.374Z",
+    "2020-06-25T18:49:59.371Z",
+    "2020-07-26T12:01:20.894Z",
+  ],
 };
 
 const account4 = {
@@ -50,6 +60,16 @@ const account4 = {
   movements: [430, 1000, 700, 50, 90],
   interestRate: 1,
   pin: 4444,
+  movementsDates: [
+    "2019-11-01T13:15:33.035Z",
+    "2019-11-30T09:48:16.867Z",
+    "2019-12-25T06:04:23.907Z",
+    "2020-01-25T14:18:46.235Z",
+    "2020-02-05T16:33:06.386Z",
+    "2020-04-10T14:43:26.374Z",
+    "2020-06-25T18:49:59.371Z",
+    "2020-07-26T12:01:20.894Z",
+  ],
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -82,7 +102,6 @@ const inputClosePin = document.querySelector(".form__input--pin");
 const formatMovementDate = function (date, locale) {
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
-
   const daysPassed = calcDaysPassed(new Date(), date);
 
   if (daysPassed === 0) return "Today";
@@ -329,71 +348,3 @@ btnSort.addEventListener("click", function (e) {
   sorted = !sorted;
   console.log("login");
 });
-
-/*          Testing map methods              */
-
-// const movementsDescription = account1.movements.map(
-//   (mov, i) =>
-//     `Movement ${i + 1}: You ${mov > 0 ? "deposited" : "withdrew"} ${Math.abs(
-//       mov
-//     )}`
-// );
-// console.log(movementsDescription);
-// for (const mov of movementsDescription) {
-//   console.log(mov);
-// }
-
-// const user = account3.owner;
-
-// const createUserName = function (accs) {
-//   accs.forEach(function (acc) {
-//     acc.username = acc.owner
-//       .toLowerCase()
-//       .split(" ")
-//       .map((word) => word[0])
-//       .join("");
-//   });
-// };
-// createUserName(accounts);
-
-// console.log(createUserName(accounts));
-
-// const app = function (acc) {
-//   acc.username = acc.owner
-//     .toLowerCase()
-//     .split(" ")
-//     .map((name) => name[0])
-//     .join("");
-//   // return acc.username;
-// };
-// app(account4);
-// console.log(app(account4));
-
-const data1 = [5, 2, 4, 1, 15, 8, 3];
-const data2 = [16, 6, 10, 5, 6, 1, 4];
-
-const calcAv = function (data) {
-  const humanAge = data.map((data) => (data <= 2 ? 2 * data : 16 + data * 4));
-  console.log(humanAge);
-  const adult = humanAge.filter((age) => age >= 18);
-  console.log(adult);
-  const average = adult.reduce((acc, age) => acc + age, 0) / adult.length;
-  console.log(average);
-};
-
-calcAv(data1);
-
-// A to convert the first title to uppercase.
-const convertToUppercase = function (title) {
-  const exception = ["a", "an", "and", "the", "but", "or", "on", "in", "with"];
-  const capitalize = (str) => str[0].toUpperCase() + str.slice(1);
-
-  const titleCase = title
-    .toLowerCase()
-    .split(" ")
-    .map((word) => (exception.includes(word) ? word : capitalize(word)))
-    .join(" ");
-  return capitalize(titleCase);
-};
-
-console.log(convertToUppercase("the boy is a goat FUll"));
