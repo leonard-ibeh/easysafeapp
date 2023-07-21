@@ -1,6 +1,8 @@
 # Bank App Project
 > This is a JavaScript-based Bank App project that provides various banking functionalities such as user login, multiple user management, money transfer, loan requests, account deletion, and transaction sorting. The app is designed to provide a simple and intuitive interface for users to interact with their bank accounts.
 
+![Desktop Demo](./readme-images/bankappshot.png "Desktop Demo")
+
 ## Features
 1- User Login: The app allows users to log in securely using their credentials.
 
